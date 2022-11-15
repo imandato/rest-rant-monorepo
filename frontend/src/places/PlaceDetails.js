@@ -29,28 +29,44 @@ function PlaceDetails() {
 	}
 
 	async function deletePlace() {
-		await fetch(`http://localhost:5000/places/${place.placeId}`, {
+		await fetch(`http://localhost:5001/places/${place.placeId}`, {
 			method: 'DELETE'
 		})
 		history.push('/places')
 	}
 
-	async function deleteComment(deletedComment) {
-		await fetch(`http://localhost:5000/places/${place.placeId}/comments/${deletedComment.commentId}`, {
-			method: 'DELETE'
-		})
+	  
 
-		setPlace({
-			...place,
-			comments: place.comments
-				.filter(comment => comment.commentId !== deletedComment.commentId)
-		})
-	}
-
-	async function createComment(commentAttributes) {
-		const response = await fetch(`http://localhost:5000/places/${place.placeId}/comments`, {
+	async function deleteComment(deletedComment, commentAttributes) {
+		const response = await fetch(`http://localhost:5001/places/${place.placeId}/comments/${deletedComment.commentId}`, {
 			method: 'POST',
 			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${localStorage.getItem('token')}`
+			},
+			body: JSON.stringify(commentAttributes)
+		})
+	}
+  
+
+
+	// async function deleteComment(deletedComment) {
+	// 	await fetch(`http://localhost:5001/places/${place.placeId}/comments/${deletedComment.commentId}`, {
+	// 		method: 'DELETE'
+	// 	})
+
+	// 	setPlace({
+	// 		...place,
+	// 		comments: place.comments
+	// 			.filter(comment => comment.commentId !== deletedComment.commentId)
+	// 	})
+	// }
+
+	async function createComment(commentAttributes) {
+		const response = await fetch(`http://localhost:5001/places/${place.placeId}/comments`, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${localStorage.getItem('token')}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(commentAttributes)
